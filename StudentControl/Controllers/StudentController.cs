@@ -1,4 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
+using StudentControl.Models;
+using StudentControl.Services;
 
 namespace StudentControl.Controllers
 {
@@ -6,54 +8,46 @@ namespace StudentControl.Controllers
     [Route("api/[controller]")]
     public class StudentController : ControllerBase
     {
-        // Dummy in-memory list for demonstration
-        private static readonly List<string> Students = new List<string>
+        IStudentService _studentService;
+        public StudentController(IStudentService studentService)
         {
-            "Alice",
-            "Bob",
-            "Charlie"
-        };
+            _studentService = studentService;
+        }
 
         [HttpGet]
-        public ActionResult<IEnumerable<string>> GetAll()
+        public List<Student> GetAll()
         {
-            return Ok(Students);
+            return _studentService.GetAll();
         }
 
         [HttpGet("{id}")]
-        public ActionResult<string> GetById(int id)
+        public Student GetById(int id)
         {
-            if (id < 0 || id >= Students.Count)
-                return NotFound();
-
-            return Ok(Students[id]);
+            return _studentService.GetById(id);
         }
 
         [HttpPost]
-        public ActionResult Add([FromBody] string name)
+        public Student Create([FromBody] Student student)
         {
-            Students.Add(name);
-            return CreatedAtAction(nameof(GetById), new { id = Students.Count - 1 }, name);
+            return _studentService.Create(student);
         }
 
         [HttpPut("{id}")]
-        public ActionResult Update(int id, [FromBody] string name)
+        public Student Update(int id, [FromBody] Student student)
         {
-            if (id < 0 || id >= Students.Count)
-                return NotFound();
-
-            Students[id] = name;
-            return NoContent();
+            return _studentService.Update(id, student);
         }
 
         [HttpDelete("{id}")]
-        public ActionResult Delete(int id)
+        public Student Delete(int id)
         {
-            if (id < 0 || id >= Students.Count)
-                return NotFound();
-
-            Students.RemoveAt(id);
-            return NoContent();
+            return _studentService.Delete(id);
+        }
+        
+        [HttpGet("hasaprove/{id}")]
+        public bool HasAproved(int id)
+        {
+            return _studentService.HasAproved(id);
         }
     }
 }

@@ -1,10 +1,17 @@
+using System.Net.Http.Headers;
 using StudentControl.Models;
 
 namespace StudentControl.Services
 {
-    public class StudentService
+    public class StudentService : IStudentService
     {
-        private readonly List<Student> students = new List<Student>();
+        private List<Student> students;
+
+        public StudentService()
+        {
+            // Dummy in-memory list for demonstration
+            students = new List<Student>();
+        }
 
         public List<Student> GetAll()
         {
@@ -16,34 +23,68 @@ namespace StudentControl.Services
             var student = students.FirstOrDefault(s => s.CI == CI);
             if (student == null)
             {
-                student = new Student { CI = 0, Name = "Unknown", Grade = 0 };
+                student = new Student { CI = 0, Name = "Not Found", Grade = 0 };
             }
             return student;
         }
 
-        public void Add(Student student)
+        public Student Create(Student student)
         {
-            students.Add(student);
+            Student createdStudent;
+            if (students.Any(s => s.CI == student.CI))
+            {
+                createdStudent = new Student { CI = 0, Name = "Already Exists", Grade = 0 };
+            }
+
+            if (student.CI < 1000 || student.Grade < 0 || student.Grade > 100)
+            {
+                createdStudent = new Student { CI = 0, Name = "Invalid Data", Grade = 0 };
+            }
+            else
+            {
+                students.Add(student);
+                createdStudent = student;
+            }
+            return createdStudent;
+        }
+        public Student Update(int CI, Student updatedStudent)
+        {
+            Student student = GetById(CI);
+            if (student == null)
+            {
+                student = new Student { CI = 0, Name = "Not Found", Grade = 0 };
+            }
+            else
+            {
+                student.Name = updatedStudent.Name;
+                student.Grade = updatedStudent.Grade;
+            }
+            return student;
         }
 
-        public bool Update(int CI, Student updatedStudent)
+        public Student Delete(int CI)
         {
             var student = GetById(CI);
-            if (student == null) return false;
-            
-            student.Name = updatedStudent.Name;
-            student.Grade = updatedStudent.Grade;
-
-            return true;
+            if (student == null)
+            {
+                student = new Student { CI = 0, Name = "Not Found", Grade = 0 };
+            }
+            else
+            {
+                students.Remove(student);
+            }
+            return student;
         }
 
-        public bool Delete(int id)
+        public bool HasAproved(int CI)
         {
-            var student = GetById(id);
-            if (student == null) return false;
+            var student = GetById(CI);
+            if (student == null)
+            {
+                return false;
+            }
 
-            students.Remove(student);
-            return true;
+            return student.Grade >= 51;
         }
     }
 }
