@@ -90,10 +90,10 @@ namespace StudentControl.Controllers.UnitTests
             // Arrange
             int studentCI = 1111;
             var studentService = new StudentService();
-            studentService.Create(new Student { CI = studentCI, Name = "Test Student 1", Grade = 80});
-            studentService.Create(new Student { CI = 2222, Name = "Test Student 2", Grade = 50});
-            studentService.Create(new Student { CI = 3333, Name = "Test Student 3", Grade = 90});
-            studentService.Create(new Student { CI = 4444, Name = "Test Student 4", Grade = 40});
+            studentService.Create(new Student { CI = studentCI, Name = "Ana Maria", Grade = 55 });
+            studentService.Create(new Student { CI = 2222, Name = "Jose Mesa", Grade = 46 });
+            studentService.Create(new Student { CI = 3333, Name = "Luis Martinez", Grade = 78 });
+            studentService.Create(new Student { CI = 4444, Name = "Erick Mela", Grade = 90 });
 
             var controller = new StudentController(studentService);
 
@@ -102,6 +102,25 @@ namespace StudentControl.Controllers.UnitTests
 
             // Assert
             Assert.True(result);
+        }
+        [Fact]
+        public void HasAproved_ValidStudent_ReturnsFalse_StudentService()
+        {
+            // Arrange
+            int studentCI = 2222;
+            var studentService = new StudentService();
+            studentService.Create(new Student { CI = 1111, Name = "Ana Maria", Grade = 55 });
+            studentService.Create(new Student { CI = studentCI, Name = "Jose Mesa", Grade = 46 });
+            studentService.Create(new Student { CI = 3333, Name = "Luis Martinez", Grade = 78 });
+            studentService.Create(new Student { CI = 4444, Name = "Erick Mela", Grade = 90 });
+
+            var controller = new StudentController(studentService);
+
+            // Act
+            var result = controller.HasAproved(studentCI);
+
+            // Assert
+            Assert.False(result);
         }
     }
 

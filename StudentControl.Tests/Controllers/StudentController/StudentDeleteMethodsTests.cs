@@ -48,15 +48,15 @@ namespace StudentControl.Controllers.UnitTests
         {
             // Arrange
             StudentController controller = new StudentController(new StudentServiceStub());
-            int studentId = 1111;
+            int studentCI = 1111;
 
             // Act
-            var result = controller.Delete(studentId);
+            var result = controller.Delete(studentCI);
             var studentsCount = controller.GetAll().Count;
 
             // Assert
             Assert.NotNull(result);
-            Assert.Equal("Test Student 1", result.Name);
+            Assert.Equal("Ana Maria", result.Name);
             Assert.Equal(1111, result.CI);
             Assert.Equal(3, studentsCount);
         }
