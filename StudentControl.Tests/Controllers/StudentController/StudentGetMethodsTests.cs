@@ -3,6 +3,7 @@ using StudentControl.Controllers;
 using StudentControl.Models;
 using StudentControl.Services;
 using StudentControl.Tests.Stubs;
+using StudentControl.Tests.Utils;
 using Xunit;
 
 namespace StudentControl.Controllers.UnitTests
@@ -14,7 +15,8 @@ namespace StudentControl.Controllers.UnitTests
         public void GetAll_ListOfStudents_ReturnsAllStudents()
         {
             // Arrange
-            var controller = new StudentController(new StudentServiceStub());
+            //var controller = new StudentController(new StudentServiceStub());
+            StudentController controller = StudentUtils.GetTestStudentController();
 
             // Act
             var result = controller.GetAll();

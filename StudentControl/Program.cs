@@ -2,7 +2,7 @@ using StudentControl.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddTransient<StudentService>();
+builder.Services.AddTransient<IStudentService>();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 
